@@ -14,14 +14,14 @@ export default function App() {
     }
 
     try {
-      const client = await (new ClientBuilder()).homeserverUrl(homeserver).build(); 
+      const client = await (new ClientBuilder()).homeserverUrl(homeserver).build();
       const loginDetails = await client.homeserverLoginDetails();
 
       setStatus(`url: ${loginDetails.url()}\n`
-        + `supportsOidcLogin: ${loginDetails.supportsOidcLogin()}\n`
+        + `supportsOidcLogin: ${loginDetails.supportsOauthLogin()}\n`
         + `supportsPasswordLogin: ${loginDetails.supportsPasswordLogin()}`);
     } catch (error) {
-     setStatus(`${error}`);
+      setStatus(`${error}`);
     }
   }, [homeserver]);
 
