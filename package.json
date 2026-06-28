@@ -233,6 +233,7 @@
     "version": "0.41.2"
   },
   "dependencies": {
+    "@ubjs/core": "^0.31.0-3",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "tar": "^7.4.3",

@@ -4524,6 +4524,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ubjs/core@npm:^0.31.0-3":
+  version: 0.31.0-3
+  resolution: "@ubjs/core@npm:0.31.0-3"
+  checksum: d055beadd79fdae41906b827c53c2134e269c05a9d60e5e573fcecad950c153b5a1ea29c663e9990b57b8f31fd8e3e46f19a923c0221c40708af981280993e91
+  languageName: node
+  linkType: hard
+
 "@ungap/structured-clone@npm:^1.2.0":
   version: 1.2.0
   resolution: "@ungap/structured-clone@npm:1.2.0"
@@ -4561,6 +4568,7 @@ __metadata:
     "@release-it/conventional-changelog": ^5.0.0
     "@types/jest": ^29.5.5
     "@types/react": ^18.2.44
+    "@ubjs/core": ^0.31.0-3
     commitlint: ^17.0.2
     del-cli: ^5.1.0
     eslint: ^8.51.0
