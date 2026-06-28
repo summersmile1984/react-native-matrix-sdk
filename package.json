@@ -220,6 +220,11 @@
     "android": {
       "javaPackageName": "com.unomed.reactnativematrixsdk"
     },
+    "ios": {
+      "modulesProvider": {
+        "ReactNativeMatrixSdk": "ReactNativeMatrixSdk"
+      }
+    },
     "includesGeneratedCode": true
   },
   "create-react-native-library": {
