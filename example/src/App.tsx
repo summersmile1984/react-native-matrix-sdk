@@ -18,7 +18,7 @@ export default function App() {
       const loginDetails = await client.homeserverLoginDetails();
 
       setStatus(`url: ${loginDetails.url()}\n`
-        + `supportsOidcLogin: ${loginDetails.supportsOidcLogin()}\n`
+        + `supportsOauthLogin: ${loginDetails.supportsOauthLogin()}\n`
         + `supportsPasswordLogin: ${loginDetails.supportsPasswordLogin()}`);
     } catch (error) {
      setStatus(`${error}`);

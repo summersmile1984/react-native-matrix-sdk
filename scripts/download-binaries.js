@@ -8,7 +8,7 @@ const tar = require('tar');
 
 const PACKAGE_JSON = require('../package.json');
 const VERSION = PACKAGE_JSON.version;
-const REPO = 'unomed-dev/react-native-matrix-sdk';
+const REPO = 'summersmile1984/react-native-matrix-sdk';
 
 async function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
