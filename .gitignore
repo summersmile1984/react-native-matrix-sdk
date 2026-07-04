@@ -83,3 +83,6 @@ rust_modules/
 ios/generated
 android/generated
 binaries.tar.gz
+
+# yarn-managed repo (packageManager: yarn@3.6.1) — keep stray npm artifacts out
+package-lock.json

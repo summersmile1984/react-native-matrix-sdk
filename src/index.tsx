@@ -58,4 +58,3 @@ export default {
   matrix_sdk_ffi,
   matrix_sdk_ui,
 };
-

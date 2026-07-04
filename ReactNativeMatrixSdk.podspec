@@ -16,6 +16,15 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/unomed-dev/react-native-matrix-sdk.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}", "ios/generated/**/*.{h,m,mm}", "cpp/**/*.{hpp,cpp,c,h}", "cpp/generated/**/*.{hpp,cpp,c,h}"
+  # ── fork fix: a library must NOT ship/compile app-level codegen providers ──
+  # ubrn's generate step left RN *app-level* aggregation files in ios/generated/
+  # (RCTAppDependencyProvider / RCTModuleProviders / RCTThirdPartyComponentsProvider / …).
+  # The HOST app generates those for ITS OWN RN version; compiling the package's copies
+  # creates DUPLICATE ObjC classes that collide at runtime ("one will be used; which is
+  # undefined") and break TurboModule registration whenever the app's RN differs from the
+  # one this package was generated against (here pkg=RN0.76 vs app=RN0.81). Exclude them
+  # so only the app's own copies exist — keeps the SDK RN-version-agnostic.
+  s.exclude_files = "ios/generated/RCT*Provider*.{h,mm}"
   s.vendored_frameworks = "build/RnMatrixRustSdk.xcframework"
   s.dependency    "uniffi-bindgen-react-native", "0.31.0-3"
 
