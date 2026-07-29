@@ -11,7 +11,6 @@
 
 Powered by [uniffi-bindgen-react-native] and [create-react-native-library].
 
-
 ## Installation
 
 ### Installation into your own project
@@ -22,7 +21,6 @@ This package is available in the [npm registry].
 npm i @unomed/react-native-matrix-sdk
 yarn add @unomed/react-native-matrix-sdk
 ```
-
 
 ### Installation from local checkout
 
@@ -56,22 +54,38 @@ to rebuild the Rust code and regenerate the module with
 yarn generate
 ```
 
+For Android-only regeneration, use:
+
+```sh
+yarn generate:android
+```
+
+The Android build runs `scripts/apply-android-native-patches.js` after
+`ubrn checkout`. The script patches generated or ignored native dependencies,
+so the fixes survive a clean regeneration:
+
+- Node 24-compatible package-root and working-directory handling for UBRN;
+- an AWS-LC/Folly `sdallocx` symbol collision fix that keeps the allocator
+  helper local and links the static library symbolically;
+- `AWS_LC_SYS_NO_JITTER_ENTROPY=1`, which selects the supported system-entropy
+  path on Android.
+
+Generated `android/CMakeLists.txt` output is expected to change after
+regeneration. Do not move these compatibility fixes into hand-edits of
+generated files; update the patch script and re-run `yarn generate:android`.
 
 ## Usage
 
 See [src/index.ts] for the module's full API. You may also find a usage example
 in [example/src/App.tsx].
 
-
 ## Contributing
 
 See the [contributing guide] to learn about the development and contribution workflow.
 
-
 ## License
 
 Apache-2.0
-
 
 [contributing guide]: CONTRIBUTING.md
 [create-react-native-library]: https://github.com/callstack/react-native-builder-bob
