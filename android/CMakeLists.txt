@@ -5,15 +5,17 @@ project(ReactNativeMatrixSdk)
 set (CMAKE_VERBOSE_MAKEFILE ON)
 set (CMAKE_CXX_STANDARD 17)
 
-# Resolve the path to the uniffi-bindgen-react-native package
+# Resolve the path to the uniffi-bindgen-react-native package.
+# Node>=24 严格 exports:'uniffi-bindgen-react-native/package.json' 未导出,
+# require.resolve 该子路径抛 ERR_PACKAGE_PATH_NOT_EXPORTED → 路径落空 →
+# UniffiCallInvoker.h 找不到。改解析主入口(exports "." 恒有)后截取包根;
+# 不能用 CMAKE_CURRENT_SOURCE_DIR 相对上跳:本包经 node_modules symlink 消费
+# (@unomed/react-native-matrix-sdk -> ../../sdk),物理路径上跳会落到仓外。
 execute_process(
-    COMMAND node -p "require.resolve('uniffi-bindgen-react-native/package.json')"
+    COMMAND node -e "const p = require.resolve('uniffi-bindgen-react-native'); const m = 'uniffi-bindgen-react-native'; console.log(p.slice(0, p.indexOf(m) + m.length))"
     OUTPUT_VARIABLE UNIFFI_BINDGEN_PATH
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-# Get the directory; get_filename_component and cmake_path will normalize
-# paths with Windows path separators.
-get_filename_component(UNIFFI_BINDGEN_PATH "${UNIFFI_BINDGEN_PATH}" DIRECTORY)
 
 # Specifies a path to native header files.
 include_directories(
@@ -25,6 +27,12 @@ include_directories(
 
 add_library(unomed-react-native-matrix-sdk            SHARED
     ../cpp/unomed-react-native-matrix-sdk.cpp
+    ../cpp/generated/matrix_sdk.cpp
+    ../cpp/generated/matrix_sdk_base.cpp
+    ../cpp/generated/matrix_sdk_common.cpp
+    ../cpp/generated/matrix_sdk_crypto.cpp
+    ../cpp/generated/matrix_sdk_ffi.cpp
+    ../cpp/generated/matrix_sdk_ui.cpp
     cpp-adapter.cpp
 )
 

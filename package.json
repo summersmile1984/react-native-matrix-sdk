@@ -42,7 +42,7 @@
     "ubrn:android:prepare": "node scripts/apply-android-native-patches.js",
     "ubrn:android:build": "yarn ubrn:android:prepare && AWS_LC_SYS_NO_JITTER_ENTROPY=1 CARGO_TARGET_X86_64_LINUX_ANDROID_RUSTFLAGS=\"-L$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/lib/clang/17/lib/linux\" ubrn build android --config ubrn.yaml --native-bindings",
     "ubrn:android:build:release": "yarn ubrn:android:build --release",
-    "ubrn:ios:build": "CARGO_FEATURE_NO_NEON=1 ubrn build ios --config ubrn.yaml --native-bindings --and-generate",
+    "ubrn:ios:build": "CARGO_FEATURE_NO_NEON=1 ubrn build ios --config ubrn.yaml --native-bindings --and-generate && node scripts/apply-ios-native-patches.js",
     "ubrn:ios:build:release": "yarn ubrn:ios:build --release",
     "ubrn:ios:post-process": "del-cli swift && mv ios/swift swift && (cd example/ios && pod install) && rm -rf src/index.web.ts",
     "ubrn:checkout": "( test -d rust_modules/matrix-rust-sdk && git -C rust_modules/matrix-rust-sdk reset --hard HEAD ); ubrn checkout --config ubrn.yaml",
@@ -55,10 +55,12 @@
     "generate:release": "yarn generate:release:android && yarn generate:release:ios",
     "generate:release:android": "yarn ubrn:clean:android && yarn ubrn:checkout && yarn ubrn:android:build:release --and-generate && node scripts/sort-uniffi-calls.js",
     "generate:release:ios": "yarn ubrn:clean:ios && yarn ubrn:checkout && yarn ubrn:ios:build:release && yarn ubrn:ios:post-process",
+    "codegen": "node scripts/build-codegen.js",
     "format": "prettier -w '**/*.{ts,tsx}'",
     "example": "yarn workspace @unomed/react-native-matrix-sdk-example",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "test:binaries": "node --test scripts/__tests__/binary-artifacts.test.js",
     "clean": "del-cli -v android/build example/android/build example/android/app/build example/ios/build lib **/.cxx",
     "prepare": "bob build",
     "release": "release-it",
@@ -157,6 +159,9 @@
     "root": true,
     "extends": [
       "@react-native",
+      "prettier"
+    ],
+    "plugins": [
       "prettier"
     ],
     "rules": {

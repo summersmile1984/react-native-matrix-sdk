@@ -1,108 +1,34 @@
-This is a new [**React Native**] project, bootstrapped using [`@react-native-community/cli`].
+# Matrix SDK React Native example
 
+This is a private debug smoke-test app for the SDK workspace. It verifies that
+the local package links into React Native, renders a capability screen, and can
+query a homeserver's advertised login methods. It is not a production client
+and its release build is deliberately disabled.
 
-# Getting Started
-
-> **Note**: Make sure you have completed the [React Native - Environment Setup] instructions up to
-> the "Creating a new application" step, before proceeding.
-
-
-## Step 1: Start the Metro Server
-
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
+Run commands from the SDK repository root:
 
 ```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+yarn install --immutable
+yarn workspace @unomed/react-native-matrix-sdk-example test
+yarn workspace @unomed/react-native-matrix-sdk-example start
+yarn workspace @unomed/react-native-matrix-sdk-example android
+yarn workspace @unomed/react-native-matrix-sdk-example ios
 ```
 
+The homeserver field accepts HTTPS URLs. Plain HTTP is limited to loopback
+addresses for local development, and credentials, query strings, and fragments
+are rejected.
 
-## Step 2: Start your Application
+## Native build gates
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React
-Native project. Run the following command to start your _Android_ or _iOS_ app:
+Android and iOS codegen use `yarn codegen` and fail closed if required generated
+artifacts are absent. iOS installs the CocoaPods version pinned in
+`Gemfile.lock` and requires `pod install --deployment`.
 
-**For Android**
+CI runs lint, TypeScript checks, behavior tests, binary-installer tests, both
+native debug builds, and the iOS render test. Android tasks whose name contains
+`release` fail intentionally; do not distribute this example.
 
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-**For iOS**
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_
-or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode
-respectively.
-
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the
-   **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd>
-   + <kbd>M</kbd> (on macOS)) to see your changes.
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and
-   see your changes.
-
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the
-  [Integration guide].
-- If you're curious to learn more about React Native, check out the [Introduction to React Native].
-
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting] page.
-
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website] - learn more about React Native.
-- [Getting Started] - an **overview** of React Native and how setup your environment.
-- [Learn the Basics] - a **guided tour** of the React Native **basics**.
-- [Blog] - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`] - the Open Source; GitHub **repository** for React Native.
-
-
-[**React Native**]: https://reactnative.dev
-[`@facebook/react-native`]: https://github.com/facebook/react-native
-[`@react-native-community/cli`]: https://github.com/react-native-community/cli
-[Blog]: https://reactnative.dev/blog
-[Getting Started]: https://reactnative.dev/docs/environment-setup
-[Integration guide]: https://reactnative.dev/docs/integration-with-existing-apps
-[Introduction to React Native]: https://reactnative.dev/docs/getting-started
-[Learn the Basics]: https://reactnative.dev/docs/getting-started
-[React Native - Environment Setup]: https://reactnative.dev/docs/environment-setup
-[React Native Website]: https://reactnative.dev
-[Troubleshooting]: https://reactnative.dev/docs/troubleshooting
+The example remains on React Native 0.76 while the supported Gemini application
+uses React Native 0.81. Passing this smoke test therefore proves the SDK's
+example contract, not full compatibility with the production application.

@@ -1,34 +1,40 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "package.json",
+    "yarn.lock",
+    "*.podspec",
+    "src/**",
+    "cpp/**",
+    "swift/**",
+    "ios/**",
+    "android/CMakeLists.txt",
+    "android/src/**",
+    "scripts/**"
+  ],
   "pipeline": {
     "build:android": {
+      "cache": false,
       "env": ["ORG_GRADLE_PROJECT_newArchEnabled"],
       "inputs": [
         "package.json",
-        "android",
-        "!android/build",
-        "src/*.ts",
-        "src/*.tsx",
-        "example/package.json",
-        "example/android",
-        "!example/android/.gradle",
-        "!example/android/build",
-        "!example/android/app/build"
+        "src/**",
+        "android/**",
+        "!android/.gradle/**",
+        "!android/build/**",
+        "!android/app/build/**"
       ],
       "outputs": []
     },
     "build:ios": {
+      "cache": false,
       "env": ["RCT_NEW_ARCH_ENABLED"],
       "inputs": [
         "package.json",
-        "*.podspec",
-        "ios",
-        "src/*.ts",
-        "src/*.tsx",
-        "example/package.json",
-        "example/ios",
-        "!example/ios/build",
-        "!example/ios/Pods"
+        "src/**",
+        "ios/**",
+        "!ios/build/**",
+        "!ios/Pods/**"
       ],
       "outputs": []
     }

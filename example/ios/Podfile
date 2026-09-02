@@ -32,7 +32,15 @@ target 'ReactNativeMatrixSdkExample' do
 
 
   pre_install do |installer|
-    system("cd ../../ && npx bob build --target codegen")
+    sdk_root = File.expand_path('../..', __dir__)
+    codegen_succeeded = system(
+      'node',
+      'scripts/build-codegen.js',
+      :chdir => sdk_root
+    )
+    unless codegen_succeeded
+      raise Pod::Informative, 'Matrix SDK codegen failed; refusing to continue pod installation'
+    end
   end
 
   post_install do |installer|

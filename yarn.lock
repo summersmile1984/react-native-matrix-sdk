@@ -4551,13 +4551,16 @@ __metadata:
     "@react-native/babel-preset": 0.76.9
     "@react-native/metro-config": 0.76.9
     "@react-native/typescript-config": 0.76.9
+    "@types/jest": ^29.5.5
+    "@unomed/react-native-matrix-sdk": "workspace:*"
+    jest: ^29.7.0
     react: 18.3.1
     react-native: 0.76.9
     react-native-builder-bob: ^0.31.0
   languageName: unknown
   linkType: soft
 
-"@unomed/react-native-matrix-sdk@workspace:.":
+"@unomed/react-native-matrix-sdk@workspace:*, @unomed/react-native-matrix-sdk@workspace:.":
   version: 0.0.0-use.local
   resolution: "@unomed/react-native-matrix-sdk@workspace:."
   dependencies:

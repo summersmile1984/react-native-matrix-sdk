@@ -98,11 +98,18 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name.toLowerCase().contains("release")) {
+        task.doFirst {
+            throw new GradleException(
+                "The SDK example is a private debug smoke-test app and must not produce release artifacts."
+            )
         }
     }
 }
@@ -126,7 +133,7 @@ if (isNewArchitectureEnabled()) {
     // Since our library doesn't invoke codegen automatically we need to do it here.
     tasks.register('invokeLibraryCodegen', Exec) {
         workingDir "$rootDir/../../"
-        commandLine "npx", "bob", "build", "--target", "codegen"
+        commandLine "node", "scripts/build-codegen.js"
     }
     preBuild.dependsOn invokeLibraryCodegen
 }

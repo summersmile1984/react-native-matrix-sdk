@@ -4,8 +4,8 @@
 #import <React/RCTLog.h>
 #import <React/RCTRootView.h>
 
-#define TIMEOUT_SECONDS 600
-#define TEXT_TO_LOOK_FOR @"Welcome to React"
+#define TIMEOUT_SECONDS 30
+#define TEXT_TO_LOOK_FOR @"Matrix SDK capability smoke test"
 
 @interface ReactNativeMatrixSdkExampleTests : XCTestCase
 
@@ -26,7 +26,7 @@
   return NO;
 }
 
-- (void)testRendersWelcomeScreen
+- (void)testRendersSdkCapabilityScreen
 {
   UIViewController *vc = [[[RCTSharedApplication() delegate] window] rootViewController];
   NSDate *date = [NSDate dateWithTimeIntervalSinceNow:TIMEOUT_SECONDS];

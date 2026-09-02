@@ -74,9 +74,17 @@ Generated `android/CMakeLists.txt` output is expected to change after
 regeneration. Do not move these compatibility fixes into hand-edits of
 generated files; update the patch script and re-run `yarn generate:android`.
 
+Published native archives contain `binary-manifest.json`, which binds every
+iOS and Android binary to this package's exact name and version with file sizes
+and SHA-256 checksums. `postinstall` downloads into a temporary directory,
+validates the complete archive, and only then replaces installed binaries. A
+missing manifest, version mismatch, truncated download, unexpected archive
+entry, or checksum failure makes installation fail rather than leaving partial
+or unverified native files behind.
+
 ## Usage
 
-See [src/index.ts] for the module's full API. You may also find a usage example
+See [src/index.tsx] for the module's full API. You may also find a usage example
 in [example/src/App.tsx].
 
 ## Contributing
@@ -92,5 +100,5 @@ Apache-2.0
 [example/src/App.tsx]: example/src/App.tsx
 [matrix-rust-sdk]: https://github.com/matrix-org/matrix-rust-sdk
 [npm registry]: https://www.npmjs.com/package/@unomed/react-native-matrix-sdk
-[src/index.ts]: src/index.ts
+[src/index.tsx]: src/index.tsx
 [uniffi-bindgen-react-native]: https://github.com/jhugman/uniffi-bindgen-react-native
