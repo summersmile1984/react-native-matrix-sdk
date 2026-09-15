@@ -56,7 +56,7 @@ async function main() {
     const notes = path.join(temporary, 'notes.md');
     fs.writeFileSync(
       notes,
-      `Native libraries for ${metadata.name}@${metadata.version}.\n\nSDK source: ${sourceCommit}\nRust source: ${metadata.nativeRelease.rustRevision}\nSHA-256: ${digest}\n\nAndroid arm64-v8a/armeabi-v7a and iOS device/simulator XCFramework.\n`
+      `Native libraries for ${metadata.name}@${metadata.version}.\n\nSDK source: ${sourceCommit}\nRust source: ${metadata.nativeRelease.rustRevision}\nSHA-256: ${digest}\n\nAndroid arm64-v8a/armeabi-v7a/x86/x86_64 and iOS device/simulator XCFramework.\n`
     );
     execFileSync(
       'gh',

@@ -35,7 +35,7 @@ jobs:
       - name: Install pinned native toolchains
         run: |
           sdkmanager 'ndk;26.1.10909125'
-          rustup toolchain install 1.93.0 --profile minimal --target aarch64-linux-android,armv7-linux-androideabi,aarch64-apple-ios,aarch64-apple-ios-sim,x86_64-apple-ios
+          rustup toolchain install 1.93.0 --profile minimal --target aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android,aarch64-apple-ios,aarch64-apple-ios-sim,x86_64-apple-ios
           rustup override set 1.93.0
           cargo install cargo-ndk --version 4.1.2 --locked
       - name: Verify binary archive rejection cases

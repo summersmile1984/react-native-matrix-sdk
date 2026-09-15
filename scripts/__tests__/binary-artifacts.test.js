@@ -72,6 +72,11 @@ async function createFixtureProject(rootDir) {
       'android/src/main/jniLibs/armeabi-v7a/libmatrix_sdk_ffi.so',
       'android-armv7-binary',
     ],
+    ['android/src/main/jniLibs/x86/libmatrix_sdk_ffi.so', 'android-x86-binary'],
+    [
+      'android/src/main/jniLibs/x86_64/libmatrix_sdk_ffi.so',
+      'android-x86_64-binary',
+    ],
   ]);
 
   for (const [relativePath, contents] of files) {

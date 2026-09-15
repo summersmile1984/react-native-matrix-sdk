@@ -13,6 +13,8 @@ const ANDROID_ARTIFACT = 'android/src/main/jniLibs';
 const REQUIRED_ANDROID_LIBRARIES = [
   `${ANDROID_ARTIFACT}/arm64-v8a/libmatrix_sdk_ffi.so`,
   `${ANDROID_ARTIFACT}/armeabi-v7a/libmatrix_sdk_ffi.so`,
+  `${ANDROID_ARTIFACT}/x86/libmatrix_sdk_ffi.so`,
+  `${ANDROID_ARTIFACT}/x86_64/libmatrix_sdk_ffi.so`,
 ];
 
 function toPosixPath(value) {
