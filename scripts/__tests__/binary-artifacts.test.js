@@ -121,7 +121,7 @@ test('packages and validates a complete version-bound binary archive', async () 
 
     assert.equal(manifest.package.name, PACKAGE.name);
     assert.equal(manifest.package.version, PACKAGE.version);
-    assert.equal(manifest.files.length, 4);
+    assert.equal(manifest.files.length, 6);
   });
 });
 
