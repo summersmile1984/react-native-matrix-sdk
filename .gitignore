@@ -86,3 +86,7 @@ binaries.tar.gz
 
 # yarn-managed repo (packageManager: yarn@3.6.1) — keep stray npm artifacts out
 package-lock.json
+
+binary-manifest.json
+native-release-provenance.json
+binaries.tar.gz.sha256

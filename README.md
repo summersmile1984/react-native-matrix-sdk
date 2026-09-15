@@ -102,3 +102,31 @@ Apache-2.0
 [npm registry]: https://www.npmjs.com/package/@unomed/react-native-matrix-sdk
 [src/index.tsx]: src/index.tsx
 [uniffi-bindgen-react-native]: https://github.com/jhugman/uniffi-bindgen-react-native
+
+## TurningFlow native releases
+
+The fork uses its own package version and GitHub Release; upstream `0.9.1`
+contains older Rust bindings and is not compatible with the current source.
+Native source and toolchain pins are in `package.json.nativeRelease`.
+
+On a clean isolated macOS checkout with the pinned Rust, cargo-ndk, NDK and
+Xcode installed:
+
+```sh
+node .yarn/releases/yarn-3.6.1.cjs install --immutable --mode=skip-build
+node scripts/build-native-release.js
+```
+
+Skipping install lifecycle hooks breaks the bootstrap dependency on a previously
+published native archive. The producer applies the checked-in generator patches,
+builds release libraries without rebuilding the example app, verifies generated
+Kotlin/Swift bindings against source, and packages both platforms. The consumer
+still requires a complete, checksum-verified archive; normal installation never
+silently skips native validation.
+
+The manual **Build (Release)** workflow runs the same producer. Set `publish`
+to true on main to create the versioned Release containing `binaries.tar.gz`,
+its SHA-256 and `native-release-provenance.json`. Publishing refuses existing
+tags and then verifies a fresh download. It does not publish to npm, upload
+Actions artifacts or push container images. Bump the fork version for the next
+native release; do not move an existing version tag.

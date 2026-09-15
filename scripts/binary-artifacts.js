@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const tar = require('tar');
+const { isDeepStrictEqual } = require('node:util');
 
 const MANIFEST_FILENAME = 'binary-manifest.json';
 const MANIFEST_SCHEMA_VERSION = 1;
@@ -189,6 +190,9 @@ async function createBinaryManifest(projectDir, packageMetadata) {
       name: packageMetadata.name,
       version: packageMetadata.version,
     },
+    ...(packageMetadata.nativeRelease
+      ? { nativeRelease: packageMetadata.nativeRelease }
+      : {}),
     files: entries,
   };
 }
@@ -214,6 +218,12 @@ function validateManifestShape(manifest, expectedPackage) {
     );
   }
   const manifestPackage = manifest.package || {};
+  if (
+    expectedPackage.nativeRelease &&
+    !isDeepStrictEqual(manifest.nativeRelease, expectedPackage.nativeRelease)
+  ) {
+    throw new Error('Binary native source/toolchain mismatch');
+  }
   if (
     manifestPackage.name !== expectedPackage.name ||
     manifestPackage.version !== expectedPackage.version

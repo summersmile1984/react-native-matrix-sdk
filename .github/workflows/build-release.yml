@@ -1,44 +1,57 @@
 name: Build (Release)
-on:
+'on':
   workflow_dispatch:
-
+    inputs:
+      publish:
+        description: Publish this main commit's versioned native SDK release
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: native-release-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
-  android:
-    runs-on: ubuntu-latest
-
+  native-release:
+    runs-on: macos-26
+    timeout-minutes: 180
+    permissions:
+      contents: write
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Generate
-        uses: ./.github/actions/generate
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          platform: android
-          release: true
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+          persist-credentials: false
+      - name: Require main for publication
+        if: inputs.publish
+        run: test "$GITHUB_REF" = refs/heads/main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          name: android-libs
-          path: android/**/*.so
-          if-no-files-found: error
-
-  ios:
-    runs-on: macos-14
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Generate
-        uses: ./.github/actions/generate
-        with:
-          platform: ios
-          release: true
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: xcframework
-          path: build/*.xcframework
-          if-no-files-found: error
+          node-version: 24.18.0
+      - name: Install JS build dependencies without consuming a previous release
+        run: node .yarn/releases/yarn-3.6.1.cjs install --immutable --mode=skip-build
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
+      - name: Install pinned native toolchains
+        run: |
+          sdkmanager 'ndk;26.1.10909125'
+          rustup toolchain install 1.93.0 --profile minimal --target aarch64-linux-android,armv7-linux-androideabi,aarch64-apple-ios,aarch64-apple-ios-sim,x86_64-apple-ios
+          rustup override set 1.93.0
+          cargo install cargo-ndk --version 4.1.2 --locked
+      - name: Verify binary archive rejection cases
+        run: node --test scripts/__tests__/binary-artifacts.test.js
+      - name: Build and package matching Android and iOS libraries
+        run: node scripts/build-native-release.js
+      - name: Record source and checksum evidence
+        run: |
+          {
+            echo '### Native SDK release provenance'
+            echo '```json'
+            cat native-release-provenance.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish immutable versioned native archive
+        if: inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/publish-native-release.js

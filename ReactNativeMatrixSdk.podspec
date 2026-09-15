@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => min_ios_version_supported }
-  s.source       = { :git => "https://github.com/unomed-dev/react-native-matrix-sdk.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/summersmile1984/react-native-matrix-sdk.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}", "ios/generated/**/*.{h,m,mm}", "cpp/**/*.{hpp,cpp,c,h}", "cpp/generated/**/*.{hpp,cpp,c,h}"
   # ── fork fix: a library must NOT ship/compile app-level codegen providers ──

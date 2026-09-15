@@ -1,6 +1,6 @@
 {
   "name": "@unomed/react-native-matrix-sdk",
-  "version": "0.9.1",
+  "version": "0.9.2-turningflow.1",
   "description": "⚡️ FFI bindings for matrix-rust-sdk in a React Native Turbo Module ⚡️",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -64,7 +64,9 @@
     "clean": "del-cli -v android/build example/android/build example/android/app/build example/ios/build lib **/.cxx",
     "prepare": "bob build",
     "release": "release-it",
-    "postinstall": "patch-package && node scripts/download-binaries.js"
+    "postinstall": "patch-package && node scripts/download-binaries.js",
+    "build:native-release": "node scripts/build-native-release.js",
+    "package:native-release": "node scripts/package-binaries.js"
   },
   "keywords": [
     "react-native",
@@ -74,7 +76,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/unomed-dev/react-native-matrix-sdk.git"
+    "url": "git+https://github.com/summersmile1984/react-native-matrix-sdk.git"
   },
   "author": "Johannes Marbach <n0-0ne+github@mailbox.org> (https://github.com/Johennes)",
   "license": "Apache-2.0",
@@ -137,7 +139,7 @@
       "addUntrackedFiles": true
     },
     "npm": {
-      "publish": true
+      "publish": false
     },
     "github": {
       "release": true,
@@ -244,5 +246,12 @@
     "postinstall-postinstall": "^2.1.0",
     "tar": "^7.4.3",
     "uniffi-bindgen-react-native": "0.31.0-3"
+  },
+  "nativeRelease": {
+    "rustRevision": "1c44fb66214667c6d00acaf72ab592493653708b",
+    "rustVersion": "1.93.0",
+    "ndkVersion": "26.1.10909125",
+    "cargoNdkVersion": "4.1.2",
+    "xcodeVersion": "26.6"
   }
 }

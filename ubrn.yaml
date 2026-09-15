@@ -4,7 +4,7 @@ crate:
   rev: 1c44fb66214667c6d00acaf72ab592493653708b # matrix-sdk-0.18.0
   manifestPath: bindings/matrix-sdk-ffi/Cargo.toml
 android:
-  cargoExtras: []
+  cargoExtras: ["--locked"]
   directory: android
   native_bindings_dir: kotlin
   useSharedLibrary: true
@@ -13,7 +13,7 @@ android:
     - arm64-v8a
     - armeabi-v7a
 ios:
-  cargoExtras: []
+  cargoExtras: ["--locked"]
   directory: ios
   native_bindings_dir: swift
   targets:

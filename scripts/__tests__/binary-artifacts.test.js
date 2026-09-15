@@ -26,6 +26,33 @@ const PACKAGE = {
   version: '9.8.7-test',
 };
 
+test('native source pins must match, even when the package version matches', async () => {
+  await withTemporaryDirectory(async (rootDir) => {
+    const projectDir = await createFixtureProject(rootDir);
+    const expected = {
+      ...PACKAGE,
+      nativeRelease: { rustRevision: 'a'.repeat(40), rustVersion: '1.93.0' },
+    };
+    await writeBinaryManifest(projectDir, expected);
+    await validateBinaryArtifacts(projectDir, expected);
+    await assert.rejects(
+      validateBinaryArtifacts(projectDir, {
+        ...expected,
+        nativeRelease: {
+          ...expected.nativeRelease,
+          rustRevision: 'b'.repeat(40),
+        },
+      }),
+      /native source\/toolchain mismatch/
+    );
+    await writeBinaryManifest(projectDir, PACKAGE);
+    await assert.rejects(
+      validateBinaryArtifacts(projectDir, expected),
+      /native source\/toolchain mismatch/
+    );
+  });
+});
+
 async function createFixtureProject(rootDir) {
   const projectDir = path.join(rootDir, 'project');
   const files = new Map([
