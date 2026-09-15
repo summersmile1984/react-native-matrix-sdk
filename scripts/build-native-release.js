@@ -2,6 +2,7 @@
 // Builds only the distributable native libraries. It does not install an
 // example app, regenerate the JS API, or download an existing SDK release.
 const fs = require('node:fs');
+const { Buffer } = require('node:buffer');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { createHash } = require('node:crypto');
@@ -142,6 +143,49 @@ async function main() {
     throw new Error(
       `Generated native bindings differ from release source:\n${drift}`
     );
+  for (const [abi, machine] of Object.entries({
+    'arm64-v8a': 183,
+    'armeabi-v7a': 40,
+    'x86': 3,
+    'x86_64': 62,
+  })) {
+    const binary = fs.readFileSync(
+      path.join(root, 'android/src/main/jniLibs', abi, 'libmatrix_sdk_ffi.so')
+    );
+    if (
+      !binary.subarray(0, 4).equals(Buffer.from([0x7f, 0x45, 0x4c, 0x46])) ||
+      binary[5] !== 1 ||
+      binary.readUInt16LE(18) !== machine
+    ) {
+      throw new Error(`Invalid Android ELF architecture: ${abi}`);
+    }
+  }
+  const framework = path.join(root, 'build/RnMatrixRustSdk.xcframework');
+  const info = JSON.parse(
+    output('plutil', [
+      '-convert',
+      'json',
+      '-o',
+      '-',
+      path.join(framework, 'Info.plist'),
+    ])
+  );
+  const slices = info.AvailableLibraries.map((library) => {
+    const architectures = output('xcrun', [
+      'lipo',
+      '-archs',
+      path.join(framework, library.LibraryIdentifier, library.LibraryPath),
+    ])
+      .split(/\s+/)
+      .sort()
+      .join(',');
+    return `${library.SupportedPlatform}/${library.SupportedPlatformVariant || 'device'}/${architectures}`;
+  }).sort();
+  assertEqual(
+    slices.join(';'),
+    'ios/device/arm64;ios/simulator/arm64,x86_64',
+    'XCFramework slices'
+  );
   const archive = await packageBinaries();
   const digest = createHash('sha256')
     .update(fs.readFileSync(archive))
