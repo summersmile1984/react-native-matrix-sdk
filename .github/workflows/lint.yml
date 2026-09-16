@@ -6,26 +6,25 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:
-
+  workflow_dispatch: null
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Linux
+      - ARM64
+      - turningflow-linux
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup JS
         uses: ./.github/actions/setup-js
-
       - name: Lint files
         run: yarn lint
-
       - name: Typecheck files
         run: yarn typecheck
-
       - name: Test native binary installer
         run: yarn test:binaries
-
       - name: Test example behavior
         run: yarn workspace @unomed/react-native-matrix-sdk-example test
+    if: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}

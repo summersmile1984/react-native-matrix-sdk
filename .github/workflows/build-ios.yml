@@ -6,47 +6,36 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:
-
+  workflow_dispatch: null
 jobs:
   build:
-    runs-on: macos-14
+    runs-on:
+      - self-hosted
+      - macOS
+      - ARM64
+      - turningflow-macos
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Generate
         uses: ./.github/actions/generate
         with:
           platform: ios
           release: false
-
       - name: Setup Ruby and locked CocoaPods
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
           bundler-cache: true
           working-directory: example
-
-      - name: Cache cocoapods
-        id: cocoapods-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            **/ios/Pods
-          key: ${{ runner.os }}-cocoapods-${{ hashFiles('example/ios/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cocoapods-
-
       - name: Install cocoapods
         run: |
           cd example/ios
           bundle exec pod install --deployment
         env:
           NO_FLIPPER: 1
-
       - name: Build example for iOS
         run: yarn workspace @unomed/react-native-matrix-sdk-example build:ios
-
       - name: Test example for iOS
         run: yarn workspace @unomed/react-native-matrix-sdk-example test:ios
+    if: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}

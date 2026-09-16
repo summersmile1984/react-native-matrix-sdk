@@ -3,11 +3,14 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-
+  workflow_dispatch: null
 jobs:
   install:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Linux
+      - ARM64
+      - turningflow-linux
     steps:
       - name: Install
         run: |
